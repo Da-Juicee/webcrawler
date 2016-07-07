@@ -13,7 +13,7 @@ import re
 
 def extract_hyperlinks(content):
     """Returns a list of hyperlinks."""
-    pass
+    return content
 
 
 def fetch_content(url):
