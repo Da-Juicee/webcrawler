@@ -16,7 +16,10 @@ import re
 
 def extract_hyperlinks(content):
     """Returns a list of hyperlinks."""
-    return content
+    #Regular expression, note that the group used to identify the hyperlink
+    #uses the non-greedy version of the '*' (Repeat matching) special character.
+    hyperlinks = re.findall(r'<a href="(.*?)".*>', content)
+    return hyperlinks
 
 
 def fetch_content(url):
