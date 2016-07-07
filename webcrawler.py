@@ -38,23 +38,24 @@ def fetch_content(url):
     return str(bstring)
 
 
+def process_page(url, base_url):
+    print("Page:", url)
+    content = fetch_content(url)
+    hyperlinks = extract_hyperlinks(content)
+    hyperlinks = filter_hyperlinks(hyperlinks, url)
+    for hlink in hyperlinks:
+        if not hlink in VISITED_PAGES:
+            print(hlink)
+            process_page(hlink, base_url)
+        else:
+            print("other url:", hlink)
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("url")
     args = parser.parse_args()
 
-    content = fetch_content(args.url)
-    hyperlinks = extract_hyperlinks(content)
-    assert args.url in VISITED_PAGES, VISITED_PAGES
-
-
-
-    hyperlinks = filter_hyperlinks(hyperlinks, args.url)
-
-    for hlink in hyperlinks:
-        assert hlink.startswith(args.url), "{} does not start with {}".format(hlink, args.url)
-        if not hlink in VISITED_PAGES:
-            print(hlink)
+    process_page(args.url, args.url)
 
 
 if __name__ == "__main__":
