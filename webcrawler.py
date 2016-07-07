@@ -14,6 +14,9 @@ except ImportError:
     from urllib.request import urlopen
 import re
 
+VISITED_PAGES = []
+
+
 def extract_hyperlinks(content):
     """Returns a list of hyperlinks."""
     #Regular expression, note that the group used to identify the hyperlink
@@ -31,6 +34,7 @@ def fetch_content(url):
     """Return the content from a URL."""
     handle = urlopen(url)
     bstring = handle.read()
+    VISITED_PAGES.append(url)
     return str(bstring)
 
 
@@ -41,11 +45,18 @@ def main():
 
     content = fetch_content(args.url)
     hyperlinks = extract_hyperlinks(content)
+    assert args.url in VISITED_PAGES, VISITED_PAGES
+
+
+
     hyperlinks = filter_hyperlinks(hyperlinks, args.url)
 
     for hlink in hyperlinks:
         assert hlink.startswith(args.url), "{} does not start with {}".format(hlink, args.url)
-        print(hlink)
+        if hlink in VISITED_PAGES:
+            pass
+        else:
+            print(hlink)
 
 if __name__ == "__main__":
     main()
