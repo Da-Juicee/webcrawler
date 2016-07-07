@@ -53,10 +53,9 @@ def main():
 
     for hlink in hyperlinks:
         assert hlink.startswith(args.url), "{} does not start with {}".format(hlink, args.url)
-        if hlink in VISITED_PAGES:
-            pass
-        else:
+        if not hlink in VISITED_PAGES:
             print(hlink)
+
 
 if __name__ == "__main__":
     main()
