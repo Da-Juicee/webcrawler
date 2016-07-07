@@ -3,7 +3,7 @@
 Fetch contnt from a URL. Extract the hyperliks and recurse (i.e. fetch
 the contnt of the hyperlink URLs and extract their hyperlinks and recurse).
 
-This code works with Python 2 and 3.
+This code only works with Python 2.
 """
 
 import sys
