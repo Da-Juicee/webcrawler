@@ -3,12 +3,15 @@
 Fetch contnt from a URL. Extract the hyperliks and recurse (i.e. fetch
 the contnt of the hyperlink URLs and extract their hyperlinks and recurse).
 
-This code only works with Python 3.
+This code works with Python 2 and 3.
 """
 
+import sys
 import argparse
-import urllib.request
-import requests
+try:
+    from urllib2 import urlopen
+except ImportError:
+    from urllib.request import urlopen
 import re
 
 def extract_hyperlinks(content):
@@ -18,8 +21,9 @@ def extract_hyperlinks(content):
 
 def fetch_content(url):
     """Return the content from a URL."""
-    handle = urllib.request.urlopen(url)
-    return handle.read()
+    handle = urlopen(url)
+    bstring = handle.read()
+    return str(bstring)
 
 
 def main():
