@@ -24,11 +24,7 @@ def extract_hyperlinks(content):
 
 def filter_hyperlinks(hyperlinks, base_url):
     """Return list of hyperlinks belonging to base_url."""
-    filtered = []
-    for hlink in hyperlinks:
-        if hlink.startswith(base_url):
-            filtered.append(hlink)
-    return filtered
+    return [hlink for hlink in hyperlinks if hlink.startswith(base_url)]
 
 
 def fetch_content(url):
