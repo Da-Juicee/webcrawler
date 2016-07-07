@@ -22,6 +22,15 @@ def extract_hyperlinks(content):
     return hyperlinks
 
 
+def filter_hyperlinks(hyperlinks, base_url):
+    """Return list of hyperlinks belonging to base_url."""
+    filtered = []
+    for hlink in hyperlinks:
+        if hlink.startswith(base_url):
+            filtered.append(hlink)
+    return filtered
+
+
 def fetch_content(url):
     """Return the content from a URL."""
     handle = urlopen(url)
@@ -36,8 +45,10 @@ def main():
 
     content = fetch_content(args.url)
     hyperlinks = extract_hyperlinks(content)
+    hyperlinks = filter_hyperlinks(hyperlinks, args.url)
 
     for hlink in hyperlinks:
+        assert hlink.startswith(args.url), "{} does not start with {}".format(hlink, args.url)
         print(hlink)
 
 if __name__ == "__main__":
