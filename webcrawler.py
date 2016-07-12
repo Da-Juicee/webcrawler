@@ -6,6 +6,7 @@ the contnt of the hyperlink URLs and extract their hyperlinks and recurse).
 This code only works with Python 2.
 """
 
+import os
 import sys
 import argparse
 try:
@@ -66,10 +67,25 @@ def fetch_content(url):
     VISITED_PAGES.append(url)
     return str(bstring)
 
+def get_fname(url, output_dir):
+    if url.endswith("/"):
+        url = url[:-1]
+    fname = os.path.basename(url)
+    fname = os.path.join(output_dir, fname)
+    if not (fname.endswith(".jpg") or fname.endswith('.png')):
+        fname = fname + ".html"
+    return fname
 
-def process_page(url, base_url):
+def write_page(content, fname):
+    with open(fname, "w") as fhandle:
+        fhandle.write(content)
+
+def process_page(url, base_url, output_dir):
     print("Processing page:", url)
     content = fetch_content(url)
+    fname = get_fname(url, output_dir)
+    write_page(content, fname)
+
     hyperlinks = extract_hyperlinks(content)
     hyperlinks = absurl_filter(hyperlinks, base_url)
     hyperlinks = filter_hyperlinks(hyperlinks, base_url)
@@ -77,7 +93,7 @@ def process_page(url, base_url):
     for hlink in hyperlinks:
         if not hlink in VISITED_PAGES:
             print(hlink)
-            process_page(hlink, base_url)
+            process_page(hlink, base_url, output_dir)
         else:
             print("already processed:", hlink)
 
@@ -85,9 +101,13 @@ def process_page(url, base_url):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("url")
+    parser.add_argument("output_dir")
     args = parser.parse_args()
 
-    process_page(args.url, args.url)
+    if not os.path.isdir(args.output_dir):
+        os.mkdir(args.output_dir)
+
+    process_page(args.url, args.url, args.output_dir)
 
 
 if __name__ == "__main__":
